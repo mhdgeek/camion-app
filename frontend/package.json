@@ -1,0 +1,13 @@
+{
+  "name": "camion-app-frontend",
+  "version": "1.0.0",
+  "description": "Frontend pour l'application de gestion des camions",
+  "main": "app.js",
+  "scripts": {
+    "dev": "live-server --port=3000 --open=public/",
+    "build": "echo 'Build completed'"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}

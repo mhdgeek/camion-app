@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Camions - Carrière</title>
+    <link rel="stylesheet" href="../src/styles/main.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-truck-moving"></i> Gestion des Camions - Carrière</h1>
+                <div class="header-stats" id="header-stats">
+                    <!-- Stats dynamiques -->
+                </div>
+            </div>
+            <nav class="nav">
+                <button id="btn-entree" class="nav-btn active">
+                    <i class="fas fa-sign-in-alt"></i> Entrée
+                </button>
+                <button id="btn-tableau" class="nav-btn">
+                    <i class="fas fa-tachometer-alt"></i> Tableau de Bord
+                </button>
+                <button id="btn-sortie" class="nav-btn">
+                    <i class="fas fa-sign-out-alt"></i> Sortie
+                </button>
+                <button id="btn-historique" class="nav-btn">
+                    <i class="fas fa-history"></i> Historique
+                </button>
+                <button id="btn-stats" class="nav-btn">
+                    <i class="fas fa-chart-bar"></i> Statistiques
+                </button>
+            </nav>
+        </header>
+        
+        <main class="main-content">
+            <!-- Section Enregistrement Entrée -->
+            <section id="section-entree" class="content-section active">
+                <div class="section-header">
+                    <h2><i class="fas fa-truck-loading"></i> Enregistrement d'Entrée</h2>
+                    <p>Enregistrez les camions entrants dans la carrière</p>
+                </div>
+                <div class="form-container">
+                    <form id="form-entree" class="form">
+                        <div class="form-group">
+                            <label for="plaque"><i class="fas fa-id-card"></i> Numéro de Plaque:</label>
+                            <input type="text" id="plaque" name="plaque" required 
+                                   placeholder="Ex: AB-123-CD" class="input-large">
+                        </div>
+                        <div class="form-group">
+                            <label for="chauffeur"><i class="fas fa-user"></i> Nom du Chauffeur:</label>
+                            <input type="text" id="chauffeur" name="chauffeur" required 
+                                   placeholder="Ex: Jean Dupont" class="input-large">
+                        </div>
+                        <button type="submit" class="btn-primary btn-large">
+                            <i class="fas fa-save"></i> Enregistrer l'Entrée
+                        </button>
+                    </form>
+                </div>
+                <div id="message-entree" class="message"></div>
+            </section>
+            
+            <!-- Section Tableau de Bord -->
+            <section id="section-tableau" class="content-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-tachometer-alt"></i> Tableau de Bord</h2>
+                    <p>Gestion en temps réel des camions dans la carrière</p>
+                </div>
+                <div class="controls">
+                    <button id="btn-rafraichir" class="btn-secondary">
+                        <i class="fas fa-sync-alt"></i> Rafraîchir
+                    </button>
+                    <div class="filter-group">
+                        <label for="filter-statut">Filtrer par statut:</label>
+                        <select id="filter-statut" class="filter-select">
+                            <option value="all">Tous les statuts</option>
+                            <option value="en_attente">En attente</option>
+                            <option value="charge">Chargés</option>
+                            <option value="paye">À payer</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="liste-camions" class="camions-list">
+                    <!-- Liste des camions générée dynamiquement -->
+                </div>
+            </section>
+            
+            <!-- Section Enregistrement Sortie -->
+            <section id="section-sortie" class="content-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-money-bill-wave"></i> Enregistrement des Sorties</h2>
+                    <p>Gestion des paiements et sorties des camions</p>
+                </div>
+                <div id="liste-sortie" class="camions-list">
+                    <!-- Liste des camions prêts à sortir -->
+                </div>
+            </section>
+
+            <!-- Section Historique -->
+            <section id="section-historique" class="content-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-history"></i> Historique des Mouvements</h2>
+                    <p>Consultation de l'historique complet des camions</p>
+                </div>
+                <div class="controls">
+                    <div class="search-group">
+                        <input type="text" id="search-historique" placeholder="Rechercher par plaque ou chauffeur..." class="search-input">
+                        <button type="button" id="btn-search" class="btn-secondary">
+                            <i class="fas fa-search"></i> Rechercher
+                        </button>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-date">Filtrer par date:</label>
+                        <input type="date" id="filter-date" class="filter-select">
+                        <button type="button" id="btn-clear-filters" class="btn-secondary">
+                            <i class="fas fa-times"></i> Effacer
+                        </button>
+                    </div>
+                </div>
+                <div id="liste-historique" class="historique-list">
+                    <!-- Historique généré dynamiquement -->
+                </div>
+            </section>
+
+            <!-- Section Statistiques -->
+            <section id="section-stats" class="content-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-chart-bar"></i> Statistiques de la Journée</h2>
+                    <p>Vue d'ensemble des activités de la carrière</p>
+                </div>
+                <div id="stats-container" class="stats-container">
+                    <!-- Statistiques générées dynamiquement -->
+                </div>
+                <div class="charts-container">
+                    <div class="chart-card">
+                        <h3>Répartition des Statuts</h3>
+                        <div id="chart-statuts" class="chart"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Modal pour validation groupée -->
+        <div id="modal-chargement" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Validation du Chargement</h3>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <p>Définissez les montants pour chaque camion chargé:</p>
+                    <div id="modal-camions-list"></div>
+                    <button id="btn-confirm-chargement" class="btn-primary">
+                        <i class="fas fa-check"></i> Valider le Chargement
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../src/app.js"></script>
+</body>
+</html>
