@@ -86,6 +86,56 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// @route   PUT /api/auth/change-password
+// @desc    Changer le mot de passe de l'utilisateur
+// @access  Private
+router.put('/change-password', auth, async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    const userId = req.user.id;
+
+    // Vérifier les champs requis
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ message: 'Veuillez fournir l\'ancien et le nouveau mot de passe' });
+    }
+
+    // Vérifier la longueur du nouveau mot de passe
+    if (newPassword.length < 6) {
+      return res.status(400).json({ message: 'Le nouveau mot de passe doit contenir au moins 6 caractères' });
+    }
+
+    // Trouver l'utilisateur
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'Utilisateur non trouvé' });
+    }
+
+    // Vérifier l'ancien mot de passe
+    const isCurrentPasswordValid = await user.correctPassword(currentPassword, user.password);
+    if (!isCurrentPasswordValid) {
+      return res.status(400).json({ message: 'L\'ancien mot de passe est incorrect' });
+    }
+
+    // Mettre à jour le mot de passe
+    user.password = newPassword;
+    await user.save();
+
+    res.json({
+      message: 'Mot de passe mis à jour avec succès',
+      user: {
+        id: user._id,
+        nom: user.nom,
+        email: user.email,
+        role: user.role
+      }
+    });
+
+  } catch (err) {
+    console.error('Erreur changement mot de passe:', err);
+    res.status(500).json({ message: 'Erreur serveur', error: err.message });
+  }
+});
+
 // @route   GET /api/auth/me
 // @desc    Obtenir les infos de l'utilisateur connecté
 // @access  Private

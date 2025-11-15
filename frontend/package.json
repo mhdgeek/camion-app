@@ -1,13 +1,16 @@
 {
   "name": "camion-app-frontend",
   "version": "1.0.0",
-  "description": "Frontend pour l'application de gestion des camions",
+  "type": "module",
   "scripts": {
-    "dev": "live-server --port=3000 --open=public/index.html",
-    "admin": "live-server --port=3001 --open=admin.html",
-    "start": "live-server --port=3000 public/"
+    "dev": "live-server public --port=3000",
+    "build": "mkdir -p dist && cp -r public/* dist/ && cp vercel.json dist/",
+    "start": "live-server dist --port=3000"
   },
   "devDependencies": {
     "live-server": "^1.2.2"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }

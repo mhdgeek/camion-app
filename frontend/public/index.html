@@ -159,7 +159,12 @@
             </div>
         </div>
     </div>
-    
+    <script>
+// Configuration pour production
+const API_BASE_URL = window.location.hostname === 'localhost' 
+  ? 'http://localhost:5000/api' 
+  : 'https://votre-backend.vercel.app/api';
+</script>
     <script src="../src/app.js"></script>
 </body>
 </html>
