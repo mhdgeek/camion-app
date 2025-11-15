@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord Admin</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f5f5f5; }
+        .header { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; padding: 1rem 2rem; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
+        .welcome { background: white; padding: 2rem; border-radius: 10px; text-align: center; }
+        .stats { display: flex; gap: 1rem; margin-top: 2rem; justify-content: center; }
+        .stat-card { background: #f8fafc; padding: 1.5rem; border-radius: 10px; min-width: 200px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏠 Tableau de Bord Administrateur</h1>
+        <p>Connecté en tant que: <span id="user-email">admin@carriere.com</span></p>
+    </div>
+    <div class="container">
+        <div class="welcome">
+            <h2>🎉 Bienvenue dans l'espace administrateur!</h2>
+            <p>Vous êtes maintenant connecté avec succès.</p>
+            <div class="stats">
+                <div class="stat-card">
+                    <h3>📊 Statistiques</h3>
+                    <p>Interface en cours de développement</p>
+                </div>
+            </div>
+            <button onclick="logout()" style="margin-top: 2rem; padding: 0.5rem 1rem; background: #ef4444; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                🚪 Déconnexion
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function logout() {
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminUser');
+            window.location.href = 'admin.html';
+        }
+        
+        // Afficher l'email de l'utilisateur
+        const user = JSON.parse(localStorage.getItem('adminUser') || '{"email":"admin@carriere.com"}');
+        document.getElementById('user-email').textContent = user.email;
+    </script>
+</body>
+</html>

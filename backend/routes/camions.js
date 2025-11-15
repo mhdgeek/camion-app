@@ -124,17 +124,15 @@ router.put('/valider-chargement', async (req, res) => {
 });
 
 // @route   PUT /api/camions/sortie/:id
-// @desc    Enregistrer le paiement et la sortie
+// @desc    Enregistrer la sortie (sans saisie de montant)
 // @access  Public
 router.put('/sortie/:id', async (req, res) => {
   try {
-    const { montantPaye } = req.body;
-    
     const camion = await Camion.findByIdAndUpdate(
       req.params.id,
       {
         statut: 'sorti',
-        montantPaye: montantPaye,
+        montantPaye: req.body.montantPaye || 0, // Montant optionnel
         heureDepart: Date.now(),
         dateSortie: new Date().toISOString().split('T')[0]
       },

@@ -20,10 +20,24 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/camion-ap
 // Routes
 app.use('/api/camions', require('./routes/camions'));
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/admin', require('./routes/admin'));
 
 // Route de test
 app.get('/api/test', (req, res) => {
   res.json({ message: 'API fonctionne!' });
+});
+
+// Route racine
+app.get('/', (req, res) => {
+  res.json({
+    message: 'API Camion App - Backend fonctionnel',
+    version: '1.0.0',
+    endpoints: {
+      auth: '/api/auth',
+      camions: '/api/camions',
+      admin: '/api/admin'
+    }
+  });
 });
 
 const PORT = process.env.PORT || 5000;

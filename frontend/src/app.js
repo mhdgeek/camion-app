@@ -278,22 +278,14 @@ function afficherCamionsSortie() {
                         <span class="info-value">${heureArrivee}</span>
                     </div>
                     <div class="info-item">
-                        <span class="info-label"><i class="fas fa-money-bill-wave"></i> Montant dû</span>
+                        <span class="info-label"><i class="fas fa-money-bill-wave"></i> Montant à payer</span>
                         <span class="montant-value">${camion.montantDu} FCFA</span>
                     </div>
                 </div>
                 <div class="camion-actions">
-                    <form class="paiement-form" onsubmit="enregistrerSortie(event, '${camion._id}')">
-                        <div class="form-group paiement-input">
-                            <label for="montant-${camion._id}">Montant payé (FCFA)</label>
-                            <input type="number" id="montant-${camion._id}" name="montantPaye" 
-                                   min="${camion.montantDu}" step="100" required
-                                   placeholder="${camion.montantDu}" class="montant-input">
-                        </div>
-                        <button type="submit" class="action-btn btn-sortie">
-                            <i class="fas fa-sign-out-alt"></i> Enregistrer Sortie
-                        </button>
-                    </form>
+                    <button class="action-btn btn-sortie" onclick="enregistrerSortie('${camion._id}')">
+                        <i class="fas fa-sign-out-alt"></i> Enregistrer la Sortie
+                    </button>
                 </div>
             </div>
         `;
@@ -487,10 +479,8 @@ async function definirMontant(id) {
     }
 }
 
-async function enregistrerSortie(e, id) {
-    e.preventDefault();
-    
-    const montantPaye = parseFloat(e.target.montantPaye.value);
+// NOUVELLE FONCTION : Enregistrer la sortie sans saisie de montant
+async function enregistrerSortie(id) {
     const camion = camions.find(c => c._id === id);
     
     if (!camion) {
@@ -498,10 +488,10 @@ async function enregistrerSortie(e, id) {
         return;
     }
     
-    if (montantPaye < camion.montantDu) {
-        afficherMessage('error', `Le montant payé (${montantPaye} FCFA) est inférieur au montant dû (${camion.montantDu} FCFA)`);
-        return;
-    }
+    // Confirmation avant enregistrement
+    const confirmer = confirm(`Confirmez-vous la sortie du camion ${camion.plaque} (${camion.chauffeur}) ?\nMontant à payer: ${camion.montantDu} FCFA`);
+    
+    if (!confirmer) return;
     
     try {
         const response = await fetch(`${API_BASE_URL}/camions/sortie/${id}`, {
@@ -509,7 +499,9 @@ async function enregistrerSortie(e, id) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ montantPaye })
+            body: JSON.stringify({ 
+                montantPaye: camion.montantDu // Utilise le montant déjà défini
+            })
         });
         
         if (response.ok) {

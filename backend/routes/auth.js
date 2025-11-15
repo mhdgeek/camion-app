@@ -1,6 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { auth } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -21,7 +22,7 @@ router.post('/register', async (req, res) => {
       nom,
       email,
       password,
-      role
+      role: role || 'employe'
     });
 
     await user.save();
@@ -83,6 +84,20 @@ router.post('/login', async (req, res) => {
     console.error('Erreur connexion:', err);
     res.status(500).json({ message: 'Erreur serveur', error: err.message });
   }
+});
+
+// @route   GET /api/auth/me
+// @desc    Obtenir les infos de l'utilisateur connecté
+// @access  Private
+router.get('/me', auth, async (req, res) => {
+  res.json({
+    user: {
+      id: req.user._id,
+      nom: req.user.nom,
+      email: req.user.email,
+      role: req.user.role
+    }
+  });
 });
 
 module.exports = router;
