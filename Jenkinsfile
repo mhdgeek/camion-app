@@ -161,26 +161,32 @@ pipeline {
         }
 
         stage('Configuration Kubernetes') {
-            steps {
-                script {
-                    echo "🎯 Configuration du cluster: ${K8S_CLUSTER}"
+    steps {
+        script {
+            // Au lieu de dépendre de Minikube, utiliser le contexte directement
+            withCredentials([file(credentialsId: 'k8s-kubeconfig', variable: 'KUBECONFIG_FILE')]) {
+                sh '''
+                    export KUBECONFIG=$KUBECONFIG_FILE
                     
-                    // Utilisation du kubeconfig
-                    withCredentials([file(credentialsId: 'k8s-kubeconfig', variable: 'KUBECONFIG_FILE')]) {
-                        sh """
-                            export KUBECONFIG=\$KUBECONFIG_FILE
-                            kubectl config use-context $K8S_CLUSTER
-                            kubectl cluster-info
-                        """
-                    }
+                    # Tenter la connexion avec retry
+                    for i in {1..10}; do
+                        if kubectl cluster-info > /dev/null 2>&1; then
+                            echo "✅ Connecté au cluster Kubernetes"
+                            break
+                        else
+                            echo "⚠️ Tentative $i/10 échouée, nouvel essai dans 10s..."
+                            sleep 10
+                        fi
+                    done
                     
-                    // Création du namespace
-                    sh """
-                        kubectl create namespace $K8S_NAMESPACE --dry-run=client -o yaml | kubectl apply -f - || echo "Namespace existe déjà"
-                    """
-                }
+                    # Vérifications de base
+                    kubectl get nodes
+                    kubectl get namespaces
+                '''
             }
         }
+    }
+}
 
         stage('Déploiement des Configurations K8S') {
             steps {
