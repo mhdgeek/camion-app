@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "name": "camion-app-backend",
+  "name": "camion-app-backend", 
   "builds": [
     {
       "src": "api/**/*.js",
@@ -12,9 +12,5 @@
       "src": "/(.*)",
       "dest": "/api/$1"
     }
-  ],
-  "env": {
-    "MONGODB_URI": "@mongodb_uri",
-    "JWT_SECRET": "@jwt_secret"
-  }
+  ]
 }

@@ -23,24 +23,17 @@ const UserSchema = new mongoose.Schema({
     type: String,
     enum: ['admin', 'employe'],
     default: 'employe'
-  },
-  isActive: {
-    type: Boolean,
-    default: true
   }
 }, {
   timestamps: true
 });
 
-// Hash du mot de passe avant sauvegarde
 UserSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
-  
   this.password = await bcrypt.hash(this.password, 12);
   next();
 });
 
-// Méthode pour vérifier le mot de passe
 UserSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
   return await bcrypt.compare(candidatePassword, userPassword);
 };

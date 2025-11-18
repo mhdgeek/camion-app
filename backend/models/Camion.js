@@ -4,14 +4,17 @@ const CamionSchema = new mongoose.Schema({
   plaque: {
     type: String,
     required: true,
-    unique: true,
-    uppercase: true,
-    trim: true
+    trim: true,
+    uppercase: true
   },
   chauffeur: {
     type: String,
     required: true,
     trim: true
+  },
+  dateEntree: {
+    type: String,
+    required: true
   },
   heureArrivee: {
     type: Date,
@@ -35,25 +38,13 @@ const CamionSchema = new mongoose.Schema({
   },
   ordreArrivee: {
     type: Number
-  },
-  dateEntree: {
-    type: String, // Format: YYYY-MM-DD
-    default: function() {
-      return new Date().toISOString().split('T')[0];
-    }
-  },
-  dateSortie: {
-    type: String
   }
 }, {
   timestamps: true
 });
 
-// Middleware pour automatiser l'ordre d'arrivée
-CamionSchema.pre('save', async function(next) {
-  if (this.isNew) {
-    const count = await mongoose.model('Camion').countDocuments();
-    this.ordreArrivee = count + 1;
+CamionSchema.pre('save', function(next) {
+  if (!this.dateEntree) {
     this.dateEntree = new Date().toISOString().split('T')[0];
   }
   next();

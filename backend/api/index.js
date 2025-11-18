@@ -1,12 +1,19 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-require('dotenv').config();
 
 const app = express();
 
-// Middleware
-app.use(cors());
+// Middleware CORS pour Vercel
+app.use(cors({
+  origin: [
+    'https://camion-app-frontend.vercel.app',
+    'http://localhost:3000',
+    'http://localhost:5000'
+  ],
+  credentials: true
+}));
+
 app.use(express.json());
 
 // Connexion MongoDB
@@ -17,7 +24,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 .then(() => console.log('✅ MongoDB connecté'))
 .catch(err => console.log('❌ Erreur MongoDB:', err));
 
-// Routes
+// Import des routes
 app.use('/camions', require('./camions'));
 app.use('/auth', require('./auth'));
 app.use('/admin', require('./admin'));
@@ -26,7 +33,8 @@ app.use('/admin', require('./admin'));
 app.get('/test', (req, res) => {
   res.json({ 
     message: '✅ API fonctionne sur Vercel!',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
   });
 });
 
@@ -34,7 +42,16 @@ app.get('/test', (req, res) => {
 app.get('/', (req, res) => {
   res.json({
     message: '🚀 API Camion App - Backend Vercel',
-    version: '1.0.0'
+    version: '1.0.0',
+    endpoints: ['/test', '/auth/login', '/camions', '/admin/stats']
+  });
+});
+
+// Gestion des erreurs 404
+app.use('*', (req, res) => {
+  res.status(404).json({
+    error: 'Route non trouvée',
+    path: req.originalUrl
   });
 });
 

@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  namespace: camion-app
+data:
+  app.name: "Camion App"
+  app.version: "1.0.0"
+  db.host: "mongodb-service"
+  db.port: "27017"
+  db.name: "camionapp"
+  cors.origin: "http://frontend-service.camion-app.svc.cluster.local"
+  log.level: "info"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+  namespace: camion-app
+data:
+  app.name: "Camion App"
+  app.version: "1.0.0"
+  api.timeout: "10000"
+  feature.flags: "auth,notifications,reports"

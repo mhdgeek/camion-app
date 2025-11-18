@@ -6,6 +6,10 @@
     <title>Admin - Tableau de Bord Camions</title>
      <script src="/frontend/public/admin.js"></script>
 
+     <!-- Ajouter cette ligne après la balise <head> dans admin.html -->  
+<script src="config.js"></script>
+<script>const API_BASE_URL = CONFIG.API_BASE_URL;</script>
+
      <script>
 const API_BASE_URL = window.location.hostname === 'localhost' 
   ? 'http://localhost:5000/api' 
